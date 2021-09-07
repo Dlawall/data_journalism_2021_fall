@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Turn off scientific notation
 options(scipen=999)
 ```
-
+## We spoke yesterday about debugging this code, I have submitted before our agreed upon extension
 ## About this lab
 
 To complete this lab, you need to:
