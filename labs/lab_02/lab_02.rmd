@@ -1,0 +1,103 @@
+---
+title: "lab_02"
+author: "derek willis"
+date: "8/24/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## About this lab
+
+To complete this lab, you need to:
+* run existing code as directed (look for **Task**).
+* modify existing code as directed (look for **Task**).
+* write code in empty codeblocks provided to answer questions included (look for **Q**).
+* write out the answer in the form of a complete sentence in the space given (look for **A**).
+
+When you are finished, commit changes and push to your personal GitHub repo, then submit the URL to this document on ELMS.
+
+## Load libraries and establish settings
+
+**Task** Run the codeblock below to load the Tidyverse and Lubridate. To run the codeblock, hit the little green play button in the upper right corner of the gray area (the codeblock) below.
+
+```{r}
+# Turn off scientific notation
+options(scipen=999)
+
+# Load the tidyverse and lubridate
+library(tidyverse)
+library(lubridate)
+```
+
+## Load Data
+
+Let's keep working with West Virginia loans contained in the PPP loans data.  
+
+**Task** Run the codeblock below to load the data.
+
+```{r}
+west_virginia_ppp <- read_rds("lab_02.rds")
+```
+
+## Examine Data
+
+## Answer questions
+
+**Q1** Create a new column that divides the loan amounts into multiple options: under_10k, 10k_50k, 50k_100k, 100k_500k, 500k_1m, 1m_plus. How many loans are in each group? You will need to use `case_when` to make this work and there's an example of this in the book chapter on mutate.
+**A1** [The loans per group are as follows: under_10k has 9310 loans, 10k_50k has 15372 loans, 50k_100k has 3978 loans, 100k_500k has 4152 loans, 500k_1m has 540 loans and 1m_plus has 356 loans.]
+
+```{r}
+# Write the code to produce your answer here
+west_virginia_with_case_when <- west_virginia_ppp %>%
+  mutate(
+    loan_group = case_when(
+      amount < 10000 ~ 'under_10k',
+      amount < 50000 ~ '10k_50k' ,
+      amount < 100000 ~ '50k_100k' ,
+      amount < 500000 ~ '100k_500K'
+,
+amount < 1000000 ~ '500k_1m' ,
+amount > 1000000 ~ '1m_plus' ,
+      TRUE~ 'over_10k'
+    )
+  ) %>% 
+  select(id,name,amount,loan_group,everything())
+west_virginia_with_case_when %>%
+  group_by(loan_group) %>%
+  summarise(
+    count_loan_group = n()
+  )
+
+    
+```
+
+**Q2** Which servicing lenders have the most loans with undisbursed amounts greater than 0?
+**A2** [The top three servicing lenders in terms of loans with undisbursed amounts greater than 0 are United Bank, WesBanco Bank Inc. and Premier Bank, Inc.]
+```{r}
+# Write the code to produce your answer here
+west_virginia_with_case_when %>%
+  group_by(servicing_lender_name) %>%
+  summarise(
+    count_servicing_lender_name = n()
+  ) %>%
+  arrange(desc(count_servicing_lender_name))
+```
+
+**Q3** How would you describe the top 10 list of those lenders? What do they have in common or not? (You may want to look up some of the top ones.)
+**A3** [United Bank is the largest 'home grown' bank in West Virginia, operating out of the state. WesBanco Bank Inc. and City National Bank of West Virginia are the two largest banks in the state according to total deposits and assets, according to ibanknet.com. It appears that the banks that approved the most loans are simply the largest banks in the state with the most assets to loan out to applicants.]
+
+**Q4** Which month in 2021 had the most loans approved?
+**A4** [April of 2020 had the most loans approved.]
+
+```{r}
+# Write the code to produce your answer here
+west_virginia_with_case_when %>%
+  mutate(Month = floor_date(date_approved, "month")) %>%
+  group_by(Month) %>%
+  summarise(total = n()) %>%
+  arrange(desc(total))
+    # sourced from textbook example on mutating with dates
+```
