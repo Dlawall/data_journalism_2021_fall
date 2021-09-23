@@ -29,7 +29,7 @@ library(lubridate)
 Let's say that we have county population estimates for three different years - 2010, 2015 and 2020 - in three different files. They have the same record layout and the same number of counties.
 
 **Task** Load the three CSV population estimate files. Do they have the same column structure?
-**Answer**
+**These three CSV files have the same column structure. The only difference is the year from which their data originated.**
 
 ```{r}
 popestimate_2010 <- read_csv("data/popestimate_2010.csv")
@@ -57,7 +57,7 @@ View(estimates)
 
 ### Task 4: Loading data
 **Task** Load the Maryland PPP data and a CSV file with NAICS codes. How many rows are in maryland_ppp?
-**Answer**
+**Maryland_ppp has 195,869 rows**
 
 ```{r}
 maryland_ppp <- read_rds("pre_lab_04.rds")
@@ -69,7 +69,7 @@ naics_codes <- read_csv('data/naics_codes.csv')
 
 ### Task 5: Join Them
 **Task** Run the following code to join the PPP data to the NAICS codes using the common column naics_code as the key. How many rows are there now?
-**Answer**
+**There are 195869 rows.**
 
 ```{r}
 # with nrow included to match row total
@@ -99,7 +99,7 @@ maryland_zcta <- read_csv('data/maryland_zcta.csv')
 
 ### Task 9: Join ZCTA to PPP Data
 **Task** Join the ZCTA data to the our PPP & NAICS data. What's the error message you get? What do you think it means?
-**Answer**
+**The error reads "Can't join on `x$zip` x `y$zip` because of incompatible types." because x zip is a character type and y zip is a double type. We'll have to mutate the variables to make them compatible.**
 
 ```{r}
 # join on zip - but there's a problem
@@ -114,7 +114,7 @@ maryland_zcta <- maryland_zcta %>% mutate(across(ZCTA5N, as.character))
 
 ### Task 11: Join ZCTA to PPP Data and Check
 **Task** Join the ZCTA data to the our PPP & NAICS data. Examine the columns in the new dataframe - does every row have demographic data? HINT: Use the >> character to browse columns
-**Answer**
+**No, the last rows did not load demographic data.**
 
 ```{r}
 maryland_ppp_with_naics_and_demographics <- maryland_ppp_with_naics %>% left_join(maryland_zcta, by=c("zip"="ZCTA5N"))
@@ -123,7 +123,7 @@ View(maryland_ppp_with_naics_and_demographics)
 
 ### Task 12: Make a Zip5 Column, Join ZCTA to PPP Data and Check Again
 **Task** Make a zip5 column and join again. Examine the new dataframe - now does every row have demographic data?
-**Answer**
+**Yes.**
 
 ```{r}
 # make a zip5 column and redo the join
@@ -133,7 +133,7 @@ maryland_ppp_with_naics_and_demographics <- maryland_ppp_with_naics %>% left_joi
 
 ### Task 13: Asking Demographic Questions
 **Task** Find the number of PPP loans that went to ZCTAs with more than 50% non-Hispanic Black population, and calculate the average and median amounts for those loans. Put your answers below.
-**Answer**
+**44032 PPP loans went to ZCTAs with more than 50% non-Hispanic Black people, the average and median of which are $53836.46 and $20000, respectively.**
 
 ```{r}
 # zcta with > 50% non-Hispanic Black population
@@ -148,7 +148,7 @@ maryland_ppp_with_naics_and_demographics %>%
 
 ### Task 14: Asking Demographic Questions
 **Task** Find the number of PPP loans that went to ZCTAs with more than 50% non-Hispanic white population, and calculate the average and median amounts for those loans. Put your answers below.
-**Answer**
+**113937 loans went to ZCTAs with more than 50% non-Hispanic white people, with the mean and median being $88140.24 and $20833, respectively.**
 
 ```{r}
 # zcta with > 50% non-Hispanic white population
@@ -162,7 +162,7 @@ maryland_ppp_with_naics_and_demographics %>%
 
 ### Task 15: Asking Demographic Questions
 **Task** Find the number of PPP loans that went to ZCTAs with more than 50% non-Hispanic Black population, grouped by rural or urban status, and calculate the average and median amounts for those loans. Put your answers below.
-**Answer**
+**Rural non-Hispanic Black lenders received 148 loans for an average of $44328.87 and a median of $19621. Urban non-Hispanic Black lenders received 43884 loans with an average of $53868.53 and median of $20000. **
 
 ```{r}
 # zcta with > 50% non-Hispanic Black population grouped by rural/urban
@@ -177,7 +177,7 @@ maryland_ppp_with_naics_and_demographics %>%
 
 ### Task 16: Asking Demographic Questions
 **Task** Find the number of PPP loans that went to ZCTAs with more than 50% non-Hispanic white population, grouped by rural or urban status, and calculate the average and median amounts for those loans. Put your answers below.
-**Answer**
+**Rural non-Hispanic white lenders received 18337 loans for an average of $73694.14 and median of $20833. Urban lenders of the same demographic breakdown received 95600 loans with an average of $90911.14 and a median of $20833.**
 
 ```{r}
 # zcta with > 50% non-Hispanic white population grouped by rural/urban
