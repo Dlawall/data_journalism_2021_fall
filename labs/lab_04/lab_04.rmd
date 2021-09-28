@@ -39,6 +39,7 @@ Let's keep working with Maryland loan applications contained in the PPP data.
 
 ```{r}
 # add code here to accomplish the task
+maryland_ppp <- read_rds("lab_04.rds")
 ```
 
 To answer the questions below, you'll need to join both the NAICS code data and the ZCTA demographic data from the book chapter. There's a particular set of steps you'll need to perform to make that work properly.
@@ -49,6 +50,7 @@ First, let's load the NAICS code CSV file we have in the data folder:
 
 ```{r}
 # add code here to accomplish the task
+naics_codes <- read_csv("data/naics_codes.csv")
 ```
 
 Next join the two and then create a 5-character `zip5` column that we can use to join to the ZCTA data:
@@ -57,6 +59,9 @@ Next join the two and then create a 5-character `zip5` column that we can use to
 
 ```{r}
 # add code here to accomplish the task
+maryland_ppp_with_naics_codes <- maryland_ppp %>% 
+  left_join(naics_codes) %>%
+  mutate(zip5 = str_sub(zip, start = 1L, end = 5L))
 ```
 
 Let's add the Zip Code Tabulation Area dataset. You'll need to make the `ZCTA5N` column a character column, not a numeric one:
@@ -65,6 +70,10 @@ Let's add the Zip Code Tabulation Area dataset. You'll need to make the `ZCTA5N`
 
 ```{r}
 # add code here to accomplish the task
+maryland_zcta <- read_csv("data/maryland_zcta.csv") %>% 
+  mutate(across(ZCTA5N, as.character))
+
+
 ```
 
 Now we can join the PPP data to the ZCTA data:
@@ -73,30 +82,55 @@ Now we can join the PPP data to the ZCTA data:
 
 ```{r}
 # add code here to accomplish the task
+maryland_ppp_with_naics_and_demographics <- maryland_ppp_with_naics_codes %>% left_join(maryland_zcta, by=c("zip5"="ZCTA5N")) 
 ```
 
 ## Answer questions
 
 **Q1** What are the top 5 industries (using the NAICS title) with the most PPP applications in Maryland?
-**A1** [write your answer here]
+**A1** [The top five industries with the most PPP applications in Maryland are Taxi Service, Beauty Salons, Full-Service Restaurants, Offices of Real Estate Agents and Brokers and All Other Personal Services.]
 
 ```{r}
 # Write the code to produce your answer here
+maryland_ppp_with_naics_and_demographics %>%
+  group_by(title) %>%
+  summarise (
+  count = n()
+) %>%
+arrange(desc(count))
+
+  
 ```
 
 **Q2** What are the top industries (using the NAICS title) with the most PPP applications in Maryland where the loan amount is more than $150,000?
-**A2** [write your answer here]
+**A2** [The top five industries where the loan amount is more than $150,000 are Full-Service Restaurants, Offices of Physicians (except Mental Health Specialists), Plumbing, Heating and Air-Conditioning Contractors, Offices of Dentists and Commercial and Institutional Building Construction.]
 
 ```{r}
 # Write the code to produce your answer here
-
+maryland_ppp_with_naics_and_demographics %>%
+  group_by(title) %>%
+  filter(amount > 150000) %>%
+  summarise(
+    count = n()
+  ) %>%
+  arrange(desc(count))
+  
+ 
 ```
 
 **Q3** Which Maryland zip code with at least 20 percent non-Hispanic Asian population had the largest sum of PPP loans? Also show the number (count) of loans.
-**A3** [write your answer here]
+**A3** [Maryland zip code 20850 had the largest sum of PPP loans with at least 2o percent non-Hispanic Asian population with 3186 loans.]
 
 ```{r}
 # Write the code to produce your answer here
+maryland_ppp_with_naics_and_demographics %>%
+  filter(PNHA > 20) %>%
+  group_by(zip5) %>%
+  summarise (
+    count = n()
+  ) %>%
+  arrange(desc(count))
+  
 
 ```
 
@@ -105,7 +139,10 @@ Now we can join the PPP data to the ZCTA data:
 
 ```{r}
 # Write the code to produce your answer here
-
+maryland_ppp_with_naics_and_demographics %>%
+  
+  
+  
 ```
 
 **Q5** What might explain why 20850 has a significant Asian population (23.5%) and only 240 of the 3,186 loans (7.5%) are to Asian applicants?
