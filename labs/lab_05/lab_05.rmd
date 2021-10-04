@@ -110,7 +110,7 @@ Google the street address.  Google the business names and search for their corpo
 
 Based on your research, does it seem suspicious that this collection of businesses all got loans using the same address? Why or why not. Use specific facts identified in your research to support your position. 
 
-**A2.**FINISH
+**A2.**I do find it suspicious that these loans received a loan from the same address. First, the building associated with the address is one massive warehouse, seemingly not split up into separate office spaces conducive to housing multiple different businesses. In addition, open corporate failed to return a business filing for multiple of the businesses listed, producing some scrutiny over the legitimacy of those businesses. 
 
 **Q3.** Start by using the West Virginia slice of the PPP loan data that you loaded at the start of the lab to create a subset of PPP loans in West Virginia's second largest county (which you can find in wv_population_county). And then use that table you created to answer the following questions:
 
@@ -162,7 +162,7 @@ Guidance: there are a lot of steps you'll need to take to answer this question. 
 
 **Q4.** What are your two best hypotheses, which you'd need to confirm with reporting and further analysis, that explain why that industry is at the top of the list?
 
-**The restaurant industry was put into a difficult predicament during the pandemic in which they were unable to serve in-person (or at least indoor) dining at any sort of mass capacity, meaning that they would need money to cover FINISH** 
+**The restaurant industry was put into a difficult predicament during the pandemic in which they were unable to serve in-person (or at least indoor) dining at any sort of mass capacity, meaning that they would need money to cover both staffing costs as well as counteract a lack of business from the pandemic.** 
 
 **Q5.** Start with a table of loans to all businesses in the city and industry that answered question 3. Answer the following questions:
 * What is the name of the business that got the highest approved loan amount? 
@@ -178,5 +178,26 @@ Hint: you will not find the answers to the last three questions in the data.  Yo
 **A5.**
 
 ``` {r}
+Martinsburg %>%
+  group_by(naics_code) %>%
+  summarise (
+    amount = n()
+  ) %>%
+  arrange(desc(amount)) 
 
+
+
+Martinsburg %>%
+filter(naics_code == "722511")
+
+martinsburg_naics <- Martinsburg %>%
+  filter(naics_code == "722511")
+  
+  martinsburg_naics %>%
+    group_by(naics_code) %>%
+  summarise (
+    amount = n()
+  ) %>%
+  arrange(desc(amount)) 
+  #I feel that I'm very close to this, but the three separate code blocks I tried just couldn't get to the table necessary.#
 ```
