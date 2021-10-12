@@ -59,12 +59,23 @@ In this notebook, we are reverse engineering five sentences from the story.
  
 WaPo_data %>%
 filter(gender=="F")
-women_fatally_shot <- WaPo_data %>%
-  summarise(
-    count=n()
-  ) %>%
-count/6
 
+women_fatally_shot <- WaPo_data %>%
+  filter(gender=="F") %>%
+  summarise(
+   count = n()
+  ) 
+
+women_fatally_shot %>%
+  mutate()
+
+WaPo_data %>%
+  group_by(gender) %>%
+  summarise (
+    count = n()
+  ) %>%
+  arrange(desc(count))
+mutate(percetage=total/sum(total))
   
 # Display results of code below this codeblock
 
