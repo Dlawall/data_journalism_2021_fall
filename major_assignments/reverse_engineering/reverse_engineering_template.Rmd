@@ -64,7 +64,14 @@ women_fatally_shot <- WaPo_data %>%
   filter(gender=="F") %>%
   summarise(
    count = n()
-  ) 
+  ) %>%
+mutate(pct=(count/5))
+
+women_fatally_shot %>%
+  summarise(
+   count = n()
+  ) %>%
+  mutate(pct=(count/6594))
 
 women_fatally_shot %>%
   mutate()

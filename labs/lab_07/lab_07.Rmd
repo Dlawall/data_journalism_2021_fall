@@ -66,7 +66,7 @@ Q4. The website (https://www.justice.gov/criminal-fraud/cares-act-fraud) shows t
 Diamond Blue Smith is a rapper based in Florida who was accused of wire fraud and bank fraud in order to attain money through PPP loans, per court records.
 
 Q5. In what percentage of all judicial districts has the U.S. Department of Justice filed cases cases against people accused of fraud related to the PPP or EIDL loan program, according to the DOJ website listing those cases: https://www.justice.gov/criminal-fraud/cares-act-fraud? In answering this question, you should also produce a list of judicial districts where DOJ has NOT filed a case, according to this site.  Note: to answer this question, you will need to scrape a table of all district courts on this up-to-date Wikipedia page under the heading "Active Courts": https://en.wikipedia.org/wiki/List_of_United_States_district_and_territorial_courts  
-A5.
+The U.S. Justice Department filed cases in 25.5% of judicial districts (24 of 94 districts).
 
 
 ```{r}
@@ -75,6 +75,10 @@ court_list <- wiki_url %>%
   httr::GET(config = httr::config(ssl_verifypeer = FALSE)) %>%
   read_html() %>%
   html_table()
+ 
+#percentage
+ mutate(pct=(24/94)*100)
+
 
 
 
@@ -86,12 +90,11 @@ court_list
 
 ```
 Q6. What might explain why, according to this site, the DOJ has filed PPP-related fraud cases in less than half of the country's judicial districts?
-A6.
+As the rollout of the PPP program happened so suddenly, surely the Justice Department has been overwhelmed in tracking cases of fraud and therefore has taken a while to rollout prosecution measures across the country.
 
 Q7. Which state had the most approved PPP loans per 100,000 population? [This web page](https://smussenden.github.io/coursefiles/ppp_scraping_example/index.html) has links to 52 individual web pages, one for each state (plus Washington, D.C. and Puerto Rico). Each of those web pages contains a one-row html table that has the name of the state, the number of approved loans, and the 2019 population. Here's an example for [Alabama](https://smussenden.github.io/coursefiles/ppp_scraping_example/states/alabama.html). You'll need to loop over the individual state urls, scrape each individual page and combine the information on each page into a single dataframe to answer this question.  
 A7.
 ```{r}
-
 
 
 ```
