@@ -124,11 +124,13 @@ total_pop <- get_acs(geography = "zcta",
                      variables = c(total_pop = "B01003_001"))
 
 black_pop <- get_acs (geography = "zcta",
-                      variables =c(black_pop = ""))
+                      variables =c(black_pop = "B02001_003"))
+
+#I'm fine up until this point, but struggling to join these two tables even after I was able to do so in Q3. 
 ```
 
 **Q6** How would you describe to an editor the top 10 zip codes with the most removed application in terms of Black population? Where are they located, and what do they have in common? Are there any zip codes that seem different, and if so why?
 **A6**
 
 **Q7** What other columns from the PPP data could be useful in reporting on what happened to this removed loans?
-**A7**
+**I feel that having an rds of data from every state is especially useful. As we have done in the past, locating removed loans that pop up in similar places/addressses is useful, but being able to compare those numbers state-to-state is even more useful and would make for an interesting story. **
