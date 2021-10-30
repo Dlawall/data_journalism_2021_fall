@@ -28,6 +28,7 @@ Loading required libraries for this analysis.
 options(scipen=999)
 library(tidyverse)
 library(janitor)
+library(dplyr)
 ```
 
 ## Load and Cleaning Data
@@ -90,13 +91,50 @@ mutate(percetage=total/sum(total))
 
 ### Sentence 2
 
-* **Sentence text**: [Paste in sentence to engineer here]
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
+* **Sentence text**: [“The average age of women and men killed by police was 37, and about one-third were 25 to 34.”]
+* **Analysis summary**: [The numbers found were able to reasonably confirm the data used in the report. The slight margin for error came within age values that had either been redacted or removed, which changed the final results down to decimal places but no further.]
 
 ```{r}
 # Put code to reverse engineer sentence here
+#Average for women
+women_fatally_shot <- WaPo_data %>%
+  filter(gender=="F")
 
+age_women_fatally_shot <- women_fatally_shot %>%
+  drop_na() %>%
+  summarise(
+    mean_age = mean(age)
+  )
+
+# Average for men
+men_fatally_shot <- WaPo_data %>%
+  filter(gender=="M")
+
+age_men_fatally_shot <- men_fatally_shot %>%
+   drop_na() %>%
+  summarise(
+    mean_age = mean(age)
+  )
+
+
+#one-third 25 to 34
+WaPo_data %>%
+  filter(age >= "25" & age <= "34") %>%
+  summarise(
+    spec_count = n()
+  ) %>%
+  mutate(pct=(spec_count/6594)*100)
+
+WaPo_data %>%
+  summarise(
+    total_count = n()
+  )
+mutate(pct=(spec_count/6594)*100)
+(2067/6594)*100
+  
 # Display results of code below this codeblock
+glimpse(age_men_fatally_shot)
+glimpse(age_women_fatally_shot)
 
 ```
 
