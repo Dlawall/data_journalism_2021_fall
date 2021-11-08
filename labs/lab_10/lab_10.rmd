@@ -94,10 +94,35 @@ write_csv(barber_joined_data, "data/barber_joined_data.csv")
 
 **Q2.** Using Datawrapper, make a different (ideally better) version of the chart you made above. TO BE CLEAR: this new graphic should show information about states and loans with undisbursed amounts, so don't, for example, focus on a single state. To do this, you MUST go back in R and do any calculations or add additional data to make the chart more effective or answer the above question in a different way. Your chart MUST be different in that it cannot be a bar chart showing the counts of total and undisbursed applications by state. It could be a bar chart showing another calculation or metric, or a scatterplot, or some other form. Follow the same general guidelines as above for the chart's visual elements, and publish it and including the URL below, along with an explanation of how this chart is different from the first one and how you decided what to do.
 
-**A2.**
+**https://datawrapper.dwcdn.net/KGcJC/1/
+I decided to show the distribution of total loans to barbershops by state in a bubble-map chart, showing the states with the greatest amount of loans to be almost entirely east of the Mississippi, while barely any loans (relatively speaking) were given out to the west. California, of course, is the lone outlier.**
 
 ```{r}
+barber_ppp <- read_csv("data/barber_shops_ppp.csv")
 
+total_apps <- barber_ppp %>%
+  group_by(state) %>%
+  summarise(
+    count = n()
+  ) %>%
+  arrange(desc(count))
+
+great_0 <- barber_ppp %>%
+  group_by(state) %>%
+  filter(undisbursed_amount > "0") %>%
+  summarise(
+    count = n()
+  ) %>%
+  arrange(desc(count))
+
+barber_joined_data <- total_apps %>%
+  left_join(great_0, by=c("state")) %>%
+  rename(
+    total_amount = count.x,
+    greater_than_zero = count.y
+  )
+
+write_csv(barber_joined_data, "data/total_joined_data.csv")
 ```
 
 **Q3.** The online lender Kabbage, Inc. is featured in the [ProPublica PPP fake farms story](https://www.propublica.org/article/ppp-farms). To show where Kabbage was lending money, make a county-level map that shows the percentage of loans in each county that were Kabbage loans. To do this, make a codeblock and do the following:
@@ -111,7 +136,8 @@ write_csv(barber_joined_data, "data/barber_joined_data.csv")
 7. Make a county-level map using that exported CSV file that displays the percentage of Kabbage loans. Style it so that the tooltip displays the county and the percentage, and format all percentages shown on the map so that they appear with one decimal point (such as 3.4%). Follow the same general guidelines as above for the chart's visual elements, and give the map a title, description and source. Provide a legend caption and format the percentage in the same way as on the tooltips.
 8. In the answer space below, provide the URL for your published map and then describe where Kabbage loans are and are not found. Where are they more common? Look specifically at Florida in the data: are there counties on the map where no data is displayed? Why?
 
-**A3.**  
+**https://datawrapper.dwcdn.net/7Xir1/1/
+Kabbage loans are far more common in states Like Wyoming, Washington and Illinois than most any other state in the country. When loading in my data, I noticed that there were some FIPS codes that did not have a corresponding loan amount, which I believe to be because the amounts either weren't recorded or were not released to the SBA.**  
 
 ``` {r}
 kabbage_counties <- read_csv("data/kabbage_counties.csv")
@@ -131,5 +157,7 @@ county_fips <- read_csv("data/county_fips.csv")
 
 fips_combo <- county_fips %>%
   left_join(combo_cabbage, by=c("match_county"="project_county_name", "state"="project_state"))
+  
+  write.csv(fips_combo, "data/fips_plus_kabbage.csv")
 
 ```
